@@ -44,7 +44,7 @@ const CreateLeague: React.FC = () => {
             placeholder="Enter League Name"
             value={leagueName}
             onChange={(e) => setLeagueName(e.target.value)}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </div>
