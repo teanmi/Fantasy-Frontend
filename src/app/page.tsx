@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   };
 
   const handleCreateLeague = () => {
-    router.push("/create-league");
+    router.push("/league/create-league");
   };
 
   const handlePicks = () => {
