@@ -75,43 +75,52 @@ const CreateTeam = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8 text-white">
-        Create Your Team for {leagueName ? leagueName : "League"}
-      </h1>
-      <form className="flex flex-col gap-4 w-80" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label
-            className="font-semibold text-lg text-white"
-            htmlFor="teamName"
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600"> {/* Gradient background */}
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">
+          Create Your Team for {leagueName ? leagueName : "League"}
+        </h1>
+        
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col">
+            <label className="font-semibold text-lg text-deep-blue" htmlFor="teamName">
+              Team Name
+            </label>
+            <input
+              type="text"
+              id="teamName"
+              placeholder="Enter Team Name"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-blue"
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`mt-6 bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Team Name
-          </label>
-          <input
-            type="text"
-            id="teamName"
-            placeholder="Enter Team Name"
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-            className="border p-2 rounded text text-black"
-            required
-          />
-        </div>
+            {loading ? "Creating Team..." : "Create Team"}
+          </button>
 
-        {/* Submit Button */}
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>} {/* Inline error message */}
+        </form>
+
+        {/* Home Button */}
         <button
-          type="submit"
-          className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
+          onClick={() => router.push("/")} // Redirect to the homepage
+          className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 hover:bg-light-gray"
+          aria-label="Go to Home"
         >
-          {loading ? "Creating Team..." : "Create Team"}
+          Home
         </button>
-
-        {/* Error Message */}
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </form>
+      </div>
     </div>
   );
 };
