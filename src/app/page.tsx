@@ -31,9 +31,10 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-gradient-to-r from-blue-400 via-white to-red-400"> {/* Gradient background */}
       {/* Sidebar Column */}
-      <aside className="w-1/4 bg-gray-800 text-white p-6">
+      <aside className="w-1/4 bg-gray-800 text-white p-6 shadow-lg">
+        <h2 className="text-xl font-bold mb-4 text-center">Menu</h2>
         <button
           onClick={handleJoinLeague}
           className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
@@ -81,21 +82,21 @@ const Home: React.FC = () => {
       {/* Main Content Column */}
       <div className="flex-1 flex flex-col bg-gray-100">
         {/* Header Row */}
-        <header className="bg-white shadow p-6 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-800 mb-2">
+        <header className="bg-white shadow-lg p-6 text-center rounded-b-lg">
+          <h1 className="text-5xl font-extrabold text-gray-800 mb-2">
             Playoff Pulse
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-lg">
             Manage your leagues, create teams, and track stats all in one place!
           </p>
         </header>
 
         {/* Body Content */}
         <main className="flex-1 p-10">
-          {/* You can add more content here */}
           <div className="text-gray-700 text-lg">
             {/* Placeholder for body content */}
             <p>Display your league stats, create teams, or show other info</p>
+            <p className="mt-4 text-center text-xl font-semibold">Get ready for an exciting season!</p>
           </div>
         </main>
       </div>
