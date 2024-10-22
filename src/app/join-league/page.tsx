@@ -5,10 +5,15 @@ import { useRouter } from "next/navigation";
 
 const JoinLeague: React.FC = () => {
   const [leagueCode, setLeagueCode] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const router = useRouter();
 
   const handleJoinLeague = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(""); // Reset error state
+
     // Simulate league joining logic (e.g., fetching from API or database)
     const isValidLeague = await validateLeagueCode(leagueCode); // Replace with actual function
 
@@ -16,8 +21,10 @@ const JoinLeague: React.FC = () => {
       localStorage.setItem("leagueCode", leagueCode); // Save league code
       router.push("/"); // Navigate to homepage or league page
     } else {
-      alert("Invalid league code. Please try again.");
+      setError("Invalid league code. Please try again."); // Set error message
     }
+
+    setLoading(false);
   };
 
   const validateLeagueCode = async (code: string): Promise<boolean> => {
@@ -25,8 +32,8 @@ const JoinLeague: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center create-league-background">
-      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600"> {/* Gradient background */}
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
         <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">Join a League</h1>
         <p className="text-gray-600 mb-6 text-center">
           Enter the league code provided by your league commissioner to join.
@@ -48,19 +55,24 @@ const JoinLeague: React.FC = () => {
             />
           </div>
 
+          {error && <p className="text-red-500 text-sm">{error}</p>} {/* Inline error message */}
+
           <button
             type="submit"
-            className="bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md"
+            className={`bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="Join League"
+            disabled={loading} // Disable button while loading
           >
-            Join League
+            {loading ? "Joining..." : "Join League"}
           </button>
         </form>
 
         {/* Home Button */}
         <button
           onClick={() => router.push("/")} // Redirect to the homepage
-          className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md hover:bg-light-gray"
+          className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 hover:bg-light-gray"
           aria-label="Go to Home"
         >
           Home

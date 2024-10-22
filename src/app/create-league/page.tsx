@@ -5,24 +5,22 @@ import { useRouter } from "next/navigation";
 
 const CreateLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
-  const [numTeams, setNumTeams] = useState<number>(8); // Default to 8 teams
+  const [numTeams, setNumTeams] = useState<number>(2);
   const router = useRouter();
 
-  const handleCreateLeague = () => {
-    localStorage.setItem("leagueName", leagueName);
-    localStorage.setItem("numTeams", numTeams.toString());
-    router.push("/"); // Navigate back to the homepage
+  const handleCreateLeague = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here, implement your league creation logic (e.g., saving to a database)
+    localStorage.setItem("leagueName", leagueName); // Save league name
+    localStorage.setItem("numTeams", numTeams.toString()); // Save number of teams
+    router.push("/"); // Navigate to homepage or league page
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center create-league-background">
-      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">Create a New League</h1>
-        <p className="text-gray-600 mb-6 text-center">
-          Create your custom league by entering a name and selecting the number of teams.
-        </p>
-
-        <div className="flex flex-col gap-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600"> {/* Gradient background */}
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">Create a League</h1>
+        <form onSubmit={handleCreateLeague} className="flex flex-col gap-4">
           <div className="flex flex-col">
             <label className="font-semibold text-lg text-deep-blue" htmlFor="leagueName">
               League Name
@@ -37,33 +35,39 @@ const CreateLeague: React.FC = () => {
               required
             />
           </div>
-
           <div className="flex flex-col">
             <label className="font-semibold text-lg text-deep-blue" htmlFor="numTeams">
               Number of Teams
             </label>
-            <select
+            <input
+              type="number"
               id="numTeams"
+              min="2"
+              max="16"
               value={numTeams}
-              onChange={(e) => setNumTeams(parseInt(e.target.value))}
-              className="border border-gray-300 p-3 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-deep-blue"
+              onChange={(e) => setNumTeams(Number(e.target.value))}
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-blue"
               required
-            >
-              <option value={4}>4 Teams</option>
-              <option value={8}>8 Teams</option>
-              <option value={12}>12 Teams</option>
-              <option value={16}>16 Teams</option>
-            </select>
+            />
           </div>
 
           <button
-            onClick={handleCreateLeague}
-            className="bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md"
+            type="submit"
+            className="bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 hover:bg-bright-red"
             aria-label="Create League"
           >
             Create League
           </button>
-        </div>
+        </form>
+
+        {/* Home Button */}
+        <button
+          onClick={() => router.push("/")} // Redirect to the homepage
+          className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md hover:bg-light-gray"
+          aria-label="Go to Home"
+        >
+          Home
+        </button>
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ const Blog: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center create-league-background">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-600 via-white to-red-600"> {/* Updated gradient background */}
       <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
         <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">Blog</h1>
 
