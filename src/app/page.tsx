@@ -31,48 +31,48 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-r from-blue-400 via-white to-red-400"> {/* Gradient background */}
+    <div className="flex h-screen bg-gradient-to-r from-[#0077b6] to-[#90e0ef]"> {/* Gradient background */}
       {/* Sidebar Column */}
-      <aside className="w-1/4 bg-gray-800 text-white p-6 shadow-lg">
+      <aside className="w-1/4 bg-[#03045e] text-white p-6 shadow-lg">
         <h2 className="text-xl font-bold mb-4 text-center">Menu</h2>
         <button
           onClick={handleJoinLeague}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4"
           aria-label="Join League"
         >
           Join League
         </button>
         <button
           onClick={handleCreateLeague}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4"
           aria-label="Create League"
         >
           Create League
         </button>
         <button
           onClick={handlePicks}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4"
           aria-label="Picks"
         >
           Picks
         </button>
         <button
           onClick={handleMockDrafts}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4"
           aria-label="Mock Drafts"
         >
           Mock Drafts
         </button>
         <button
           onClick={handleBlog}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4" // Fixed height and margin
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 mb-4"
           aria-label="Blog"
         >
           Blog
         </button>
         <button
           onClick={handleSupport}
-          className="bg-deep-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16" // Fixed height; no margin on last button
+          className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16"
           aria-label="Support"
         >
           Support
@@ -80,10 +80,10 @@ const Home: React.FC = () => {
       </aside>
 
       {/* Main Content Column */}
-      <div className="flex-1 flex flex-col bg-gray-100">
+      <div className="flex-1 flex flex-col bg-[#caf0f8]">
         {/* Header Row */}
         <header className="bg-white shadow-lg p-6 text-center rounded-b-lg">
-          <h1 className="text-5xl font-extrabold text-gray-800 mb-2">
+          <h1 className="text-5xl font-extrabold text-[#03045e] mb-2">
             Playoff Pulse
           </h1>
           <p className="text-gray-600 text-lg">
@@ -94,7 +94,6 @@ const Home: React.FC = () => {
         {/* Body Content */}
         <main className="flex-1 p-10">
           <div className="text-gray-700 text-lg">
-            {/* Placeholder for body content */}
             <p>Display your league stats, create teams, or show other info</p>
             <p className="mt-4 text-center text-xl font-semibold">Get ready for an exciting season!</p>
           </div>
