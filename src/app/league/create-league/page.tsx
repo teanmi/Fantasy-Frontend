@@ -9,7 +9,7 @@ const CreateLeague: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null); // Error state
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [leagueId, setLeagueId] = useState<number | null>(null);
+  const [leagueID, setLeagueId] = useState<number | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,10 +27,11 @@ const CreateLeague: React.FC = () => {
           numTeams,
         }),
       });
-
+      console.log(response)
       if (response.ok) {
-        const { leagueId } = await response.json();
-        setLeagueId(leagueId);
+        const { leagueID } = await response.json();
+        console.log(leagueID)
+        setLeagueId(leagueID);
         setShowModal(true);
         setLeagueName(""); // Reset form fields
         setNumTeams(8); // Reset to default number of teams
@@ -45,8 +46,9 @@ const CreateLeague: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      {showModal && leagueId && (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600">
+      {/* Gradient background */}
+      {showModal && leagueID && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-4 text-white">
@@ -61,7 +63,7 @@ const CreateLeague: React.FC = () => {
             <div className="mb-4 p-2 bg-gray-900 border border-gray-700 rounded">
               <input
                 type="text"
-                value={`${window.location.origin}/league/${leagueId}/create-team`}
+                value={`${window.location.origin}/league/${leagueID}/create-team`}
                 readOnly
                 className="w-full bg-transparent border-none text-gray-300 outline-none"
               />
@@ -69,7 +71,7 @@ const CreateLeague: React.FC = () => {
 
             {/* Button to Redirect */}
             <button
-              onClick={() => router.push(`/league/${leagueId}/create-team`)}
+              onClick={() => router.push(`/league/${leagueID}/create-team`)}
               className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full transition-all duration-300"
             >
               Create Your Team
@@ -86,53 +88,69 @@ const CreateLeague: React.FC = () => {
         </div>
       )}
 
-      <h1 className="text-4xl font-bold mb-8">Create a New League</h1>
-      <form className="flex flex-col gap-4 w-80" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label className="font-semibold text-lg" htmlFor="leagueName">
-            League Name
-          </label>
-          <input
-            type="text"
-            id="leagueName"
-            placeholder="Enter League Name"
-            value={leagueName}
-            onChange={(e) => setLeagueName(e.target.value)}
-            className="border p-2 rounded text text-black"
-            required
-          />
-        </div>
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">
+          Create a League
+        </h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col">
+            <label
+              className="font-semibold text-lg text-deep-blue"
+              htmlFor="leagueName"
+            >
+              League Name
+            </label>
+            <input
+              type="text"
+              id="leagueName"
+              placeholder="Enter League Name"
+              value={leagueName}
+              onChange={(e) => setLeagueName(e.target.value)}
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-blue"
+              required
+            />
+          </div>
 
-        {/* Number of Teams Selector */}
-        <div className="flex flex-col mt-4">
-          <label className="font-semibold text-lg" htmlFor="numTeams">
-            Number of Teams
-          </label>
-          <select
-            id="numTeams"
-            value={numTeams}
-            onChange={(e) => setNumTeams(parseInt(e.target.value))}
-            className="border p-3 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
-            required
+          <div className="flex flex-col">
+            <label
+              className="font-semibold text-lg text-deep-blue"
+              htmlFor="numTeams"
+            >
+              Number of Teams
+            </label>
+            <select
+              id="numTeams"
+              value={numTeams}
+              onChange={(e) => setNumTeams(parseInt(e.target.value))}
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-blue"
+              required
+            >
+              <option value={4}>4 Teams</option>
+              <option value={8}>8 Teams</option>
+              <option value={12}>12 Teams</option>
+              <option value={16}>16 Teams</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg shadow-md transition-all duration-300 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            <option value={4}>4 Teams</option>
-            <option value={8}>8 Teams</option>
-            <option value={12}>12 Teams</option>
-            <option value={16}>16 Teams</option>
-          </select>
-        </div>
+            {loading ? "Creating League..." : "Create League"}
+          </button>
+        </form>
 
-        {/* Submit Button */}
+        {/* Home Button */}
         <button
-          type="submit"
-          className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading} // Disable button when loading
+          onClick={() => router.push("/")}
+          className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md hover:bg-light-gray"
         >
-          {loading ? "Creating League..." : "Create League"}
+          Home
         </button>
-      </form>
+      </div>
     </div>
   );
 };
