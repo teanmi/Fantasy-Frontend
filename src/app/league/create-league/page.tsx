@@ -18,7 +18,7 @@ const CreateLeague: React.FC = () => {
     setLoading(true); // Set loading state to true while submitting
     setError(null); // Reset error state
     try {
-      const response = await fetch("http://localhost:3000/api/leagues/create", {
+      const response = await fetch("http://localhost:3000/api/league/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const CreateLeague: React.FC = () => {
 
             {/* Button to Redirect */}
             <Link
-              href={`/league/${leagueID}/join`}
+              href={`/league/${leagueID}/join-team`}
               passHref
               className="block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full transition-all duration-300"
             >
