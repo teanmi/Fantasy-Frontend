@@ -47,6 +47,38 @@ body {
   transform: scale(1.05); /* Slightly increase size on hover */
 }
 
+.bg-deep-blue {
+  background-color: #1e3a8a; /* Example deep blue */
+}
+
+.hover\:bg-bright-red:hover {
+  background-color: #f87171; /* Example bright red */
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb; /* Light gray background */
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6; /* Slightly darker gray */
+}
+
+.text-deep-blue {
+  color: #1e3a8a; /* Text color for deep blue */
+}
+
+.text-gray-600 {
+  color: #4b5563; /* Standard gray */
+}
+
+.text-xl {
+  font-size: 1.25rem; /* Size for larger text */
+}
+
+.transition-transform {
+  transition: transform 0.2s;
+}
+
 .bg-white {
   background-color: var(--white);
 }
