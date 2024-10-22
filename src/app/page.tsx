@@ -7,26 +7,32 @@ import React, { useEffect, useState } from "react";
 const Home: React.FC = () => {
   const router = useRouter();
   const [leagues, setLeagues] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track login state
   const user = { name: "John Doe" }; // Replace with actual user state
 
   const handleLogin = () => {
+    setIsLoggedIn(true); // Set logged in state to true
     router.push("/login"); // Redirect to login page
   };
 
   const handleLogout = () => {
-    // Implement logout functionality here
+    setIsLoggedIn(false); // Set logged in state to false
     console.log("Logged out"); // Placeholder for actual logout functionality
+    // Optionally redirect to home or login
+    router.push("/"); // Redirect to the homepage after logout
   };
 
   useEffect(() => {
     const fetchLeagues = async () => {
-      const response = await fetch('/api/leagues'); // Replace with your API endpoint
+      const response = await fetch("/api/leagues"); // Replace with your API endpoint
       const data = await response.json();
       setLeagues(data);
     };
 
-    fetchLeagues();
-  }, []);
+    if (isLoggedIn) {
+      fetchLeagues();
+    }
+  }, [isLoggedIn]);
 
   return (
     <div className="flex h-screen bg-gradient-to-r from-[#0077b6] to-[#90e0ef]"> {/* Gradient background */}
@@ -81,7 +87,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* User Info / Login Button */}
-          {user ? (
+          {isLoggedIn ? (
             <div className="flex items-center">
               <span className="mr-2">{`Welcome, ${user.name}!`}</span>
               <button onClick={handleLogout} className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105">
@@ -103,19 +109,21 @@ const Home: React.FC = () => {
           </div>
 
           {/* Recent Activity Section */}
-          <section className="mt-10">
-            <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded shadow">
-                <h3 className="font-semibold">Last Game Results</h3>
-                <p>Team A vs Team B: 24-17</p>
+          {isLoggedIn && ( // Only show if logged in
+            <section className="mt-10">
+              <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded shadow">
+                  <h3 className="font-semibold">Last Game Results</h3>
+                  <p>Team A vs Team B: 24-17</p>
+                </div>
+                <div className="bg-white p-4 rounded shadow">
+                  <h3 className="font-semibold">Upcoming Matches</h3>
+                  <p>Team C vs Team D - Next Monday</p>
+                </div>
               </div>
-              <div className="bg-white p-4 rounded shadow">
-                <h3 className="font-semibold">Upcoming Matches</h3>
-                <p>Team C vs Team D - Next Monday</p>
-              </div>
-            </div>
-          </section>
+            </section>
+          )}
         </main>
 
         {/* Footer */}
