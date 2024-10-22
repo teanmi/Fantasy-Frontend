@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 const CreateLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
@@ -27,10 +28,10 @@ const CreateLeague: React.FC = () => {
           numTeams,
         }),
       });
-      console.log(response)
+      console.log(response);
       if (response.ok) {
         const { leagueID } = await response.json();
-        console.log(leagueID)
+        console.log(leagueID);
         setLeagueId(leagueID);
         setShowModal(true);
         setLeagueName(""); // Reset form fields
@@ -63,19 +64,20 @@ const CreateLeague: React.FC = () => {
             <div className="mb-4 p-2 bg-gray-900 border border-gray-700 rounded">
               <input
                 type="text"
-                value={`${window.location.origin}/league/${leagueID}/create-team`}
+                value={`${window.location.origin}/league/${leagueID}/join`}
                 readOnly
                 className="w-full bg-transparent border-none text-gray-300 outline-none"
               />
             </div>
 
             {/* Button to Redirect */}
-            <button
-              onClick={() => router.push(`/league/${leagueID}/create-team`)}
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full transition-all duration-300"
+            <Link
+              href={`/league/${leagueID}/join`}
+              passHref
+              className="block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full transition-all duration-300"
             >
               Create Your Team
-            </button>
+            </Link>
 
             {/* Close Modal Button */}
             <button
