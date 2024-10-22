@@ -6,71 +6,47 @@ import { useRouter } from "next/navigation";
 const CreateLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
   const [numTeams, setNumTeams] = useState<number>(8); // Default to 8 teams
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null); // Error state
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true); // Set loading state to true while submitting
-    setError(null); // Reset error state
-
-    try {
-      const response = await fetch("http://localhost:3000/api/leagues/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          leagueName,
-          numTeams,
-        }),
-      });
-
-      if (response.ok) {
-        alert("League created successfully!");
-        setLeagueName(""); // Reset form fields
-        setNumTeams(8); // Reset to default number of teams
-        router.push("/"); // Redirect after creation
-      } else {
-        throw new Error("Failed to create league.");
-      }
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again."); // Handle errors
-    } finally {
-      setLoading(false); // Reset loading state
-    }
+  const handleCreateLeague = () => {
+    localStorage.setItem("leagueName", leagueName);
+    localStorage.setItem("numTeams", numTeams.toString());
+    router.push("/"); // Navigate back to the homepage
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Create a New League</h1>
-      <form className="flex flex-col gap-4 w-80" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label className="font-semibold text-lg" htmlFor="leagueName">
-            League Name
-          </label>
-          <input
-            type="text"
-            id="leagueName"
-            placeholder="Enter League Name"
-            value={leagueName}
-            onChange={(e) => setLeagueName(e.target.value)}
-            className="border p-2 rounded"
-            required
-          />
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center create-league-background">
+      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">Create a New League</h1>
+        <p className="text-gray-600 mb-6 text-center">
+          Create your custom league by entering a name and selecting the number of teams.
+        </p>
 
-          {/* Number of Teams Selector */}
-          <div className="flex flex-col mt-4">
-            <label className="font-semibold text-lg" htmlFor="numTeams">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
+            <label className="font-semibold text-lg text-deep-blue" htmlFor="leagueName">
+              League Name
+            </label>
+            <input
+              type="text"
+              id="leagueName"
+              placeholder="Enter League Name"
+              value={leagueName}
+              onChange={(e) => setLeagueName(e.target.value)}
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-blue"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold text-lg text-deep-blue" htmlFor="numTeams">
               Number of Teams
             </label>
             <select
               id="numTeams"
               value={numTeams}
               onChange={(e) => setNumTeams(parseInt(e.target.value))}
-              className="border p-3 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="border border-gray-300 p-3 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-deep-blue"
               required
             >
               <option value={4}>4 Teams</option>
@@ -80,17 +56,14 @@ const CreateLeague: React.FC = () => {
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
-            type="submit"
-            className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading} // Disable button when loading
+            onClick={handleCreateLeague}
+            className="bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md"
+            aria-label="Create League"
           >
-            {loading ? "Creating League..." : "Create League"}
+            Create League
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -1,27 +1,86 @@
+/* globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --deep-blue: #003DA5; /* Primary Color */
+  --bright-red: #FF0000; /* Secondary Color */
+  --white: #FFFFFF; /* Accent Color */
+  --light-gray: #F5F5F5; /* Background Color */
+  --foreground: #171717; /* Foreground color for text */
+  --dark-gray: #4A4A4A; /* Dark Gray for accents */
+  --soft-red: #FF6B6B; /* Soft Red for highlights */
+  --bright-blue: #4A90E2; /* Bright Blue for buttons */
+  --gold: #FFD700; /* Gold for special highlights */
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--light-gray); /* Default background */
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.home-background {
+  background: linear-gradient(to bottom right, var(--light-gray), var(--deep-blue)); /* Background gradient */
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-button {
+  background-color: var(--bright-blue); /* Button background */
+  color: var(--white); /* Button text color */
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.home-button:hover {
+  background-color: var(--deep-blue); /* Change to deep blue on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.bg-white {
+  background-color: var(--white);
+}
+
+.bg-deep-blue {
+  background-color: var(--deep-blue);
+}
+
+.text-deep-blue {
+  color: var(--deep-blue);
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+/* New Styles */
+.sidebar {
+  background-color: var(--dark-gray); /* Sidebar background */
+}
+
+.sidebar-button {
+  background-color: var(--bright-red); /* Sidebar button background */
+  transition: background-color 0.3s;
+}
+
+.sidebar-button:hover {
+  background-color: var(--soft-red); /* Change to soft red on hover */
+}
+
+/* Adding a special highlight style */
+.highlight {
+  background-color: var(--gold); /* Gold highlight */
+  color: var(--dark-gray);
+  padding: 0.5rem;
+  border-radius: 4px;
 }
