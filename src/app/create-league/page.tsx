@@ -5,77 +5,104 @@ import { useRouter } from "next/navigation";
 
 const CreateLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
-  const [numTeams, setNumTeams] = useState<number>(8); // Changed to number type
+  const [numTeams, setNumTeams] = useState<number>(8); // Default to 8 teams
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null); // Error state
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true); // Set loading state to true while submitting
+    setError(null); // Reset error state
 
-    const response = await fetch("http://localhost:3000/api/leagues/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        leagueName,
-        numTeams, // Sending number of teams instead of leagueType
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/api/leagues/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          leagueName,
+          numTeams,
+        }),
+      });
 
-    if (response.ok) {
-      alert("League created successfully!");
-      router.push("/"); // Redirect to the homepage or another page after creating a league
-    } else {
-      alert("Failed to create league.");
+      if (response.ok) {
+        alert("League created successfully!");
+        setLeagueName(""); // Reset form fields
+        setNumTeams(8); // Reset to default number of teams
+        router.push("/"); // Redirect after creation
+      } else {
+        throw new Error("Failed to create league.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again."); // Handle errors
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Create a New League</h1>
-      <form className="flex flex-col gap-4 w-80" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label className="font-semibold text-lg" htmlFor="leagueName">
-            League Name
-          </label>
-          <input
-            type="text"
-            id="leagueName"
-            placeholder="Enter League Name"
-            value={leagueName}
-            onChange={(e) => setLeagueName(e.target.value)}
-            className="border p-2 rounded"
-            required
-          />
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
+        <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+          Create a New League
+        </h1>
 
-        <div className="flex flex-col mt-4">
-          {" "}
-          {/* Add margin-top to create spacing between form fields */}
-          <label className="font-semibold text-lg" htmlFor="numTeams">
-            Number of Teams
-          </label>
-          <select
-            id="numTeams"
-            value={numTeams}
-            onChange={(e) => setNumTeams(parseInt(e.target.value))}
-            className="border p-2 rounded text-black bg-white"
-            required
+        {error && (
+          <p className="text-red-500 text-center mb-4">
+            {error} {/* Display error message */}
+          </p>
+        )}
+
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          {/* League Name Input */}
+          <div className="flex flex-col">
+            <label className="font-semibold text-lg" htmlFor="leagueName">
+              League Name
+            </label>
+            <input
+              type="text"
+              id="leagueName"
+              placeholder="Enter League Name"
+              value={leagueName}
+              onChange={(e) => setLeagueName(e.target.value)}
+              className="border p-3 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              required
+            />
+          </div>
+
+          {/* Number of Teams Selector */}
+          <div className="flex flex-col mt-4">
+            <label className="font-semibold text-lg" htmlFor="numTeams">
+              Number of Teams
+            </label>
+            <select
+              id="numTeams"
+              value={numTeams}
+              onChange={(e) => setNumTeams(parseInt(e.target.value))}
+              className="border p-3 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              required
+            >
+              <option value={4}>4 Teams</option>
+              <option value={8}>8 Teams</option>
+              <option value={12}>12 Teams</option>
+              <option value={16}>16 Teams</option>
+            </select>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-all duration-300 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading} // Disable button when loading
           >
-            <option value={4}>4 Teams</option>
-            <option value={8}>8 Teams</option> {/* Default selected */}
-            <option value={12}>12 Teams</option>
-            <option value={16}>16 Teams</option>
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Create League
-        </button>
-      </form>
+            {loading ? "Creating League..." : "Create League"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
