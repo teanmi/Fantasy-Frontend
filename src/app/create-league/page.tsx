@@ -43,34 +43,23 @@ const CreateLeague: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
-        <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
-          Create a New League
-        </h1>
-
-        {error && (
-          <p className="text-red-500 text-center mb-4">
-            {error} {/* Display error message */}
-          </p>
-        )}
-
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          {/* League Name Input */}
-          <div className="flex flex-col">
-            <label className="font-semibold text-lg" htmlFor="leagueName">
-              League Name
-            </label>
-            <input
-              type="text"
-              id="leagueName"
-              placeholder="Enter League Name"
-              value={leagueName}
-              onChange={(e) => setLeagueName(e.target.value)}
-              className="border p-3 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            />
-          </div>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h1 className="text-4xl font-bold mb-8">Create a New League</h1>
+      <form className="flex flex-col gap-4 w-80" onSubmit={handleSubmit}>
+        <div className="flex flex-col">
+          <label className="font-semibold text-lg" htmlFor="leagueName">
+            League Name
+          </label>
+          <input
+            type="text"
+            id="leagueName"
+            placeholder="Enter League Name"
+            value={leagueName}
+            onChange={(e) => setLeagueName(e.target.value)}
+            className="border p-2 rounded"
+            required
+          />
+        </div>
 
           {/* Number of Teams Selector */}
           <div className="flex flex-col mt-4">
