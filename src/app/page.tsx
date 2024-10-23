@@ -23,24 +23,24 @@ const Home: React.FC = () => {
     router.push("/");
   };
 
-  useEffect(() => {
-    const fetchUserStats = async () => {
-      const response = await fetch("/api/user/stats"); // Replace with your API endpoint
-      const data = await response.json();
-      setUserStats(data);
-    };
+//   useEffect(() => {
+    // const fetchUserStats = async () => {
+    //   const response = await fetch("/api/user/stats"); // Replace with your API endpoint
+    //   const data = await response.json();
+    //   setUserStats(data);
+    // };
 
-    const fetchRecentTrades = async () => {
-      const response = await fetch("/api/recent-trades"); // Replace with your API endpoint
-      const data = await response.json();
-      setRecentTrades(data);
-    };
+    // const fetchRecentTrades = async () => {
+    //   const response = await fetch("/api/recent-trades"); // Replace with your API endpoint
+    //   const data = await response.json();
+    //   setRecentTrades(data);
+    // };
 
-    if (isLoggedIn) {
-      fetchUserStats();
-      fetchRecentTrades();
-    }
-  }, [isLoggedIn]);
+//     if (isLoggedIn) {
+//       fetchUserStats();
+//       fetchRecentTrades();
+//     }
+//   }, [isLoggedIn]);
 
   return (
     <div className="flex h-screen bg-gradient-to-r from-[#0077b6] to-[#90e0ef]">
@@ -115,12 +115,12 @@ const Home: React.FC = () => {
                 <p>Draws: {userStats.draws}</p>
                 <h3 className="font-semibold mt-4">Recent Trades</h3>
                 <ul>
-                  {recentTrades.map((trade, index) => (
+                  {/* {recentTrades.map((trade, index) => (
                     <li key={index}>
                       <p>{trade.date}</p>
                       <p>{trade.description}</p>
                     </li>
-                  ))}
+                  ))} */}
                 </ul>
               </div>
             </section>
