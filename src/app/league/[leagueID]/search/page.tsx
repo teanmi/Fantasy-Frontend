@@ -43,6 +43,30 @@ const PlayersPage = () => {
     setPosition(e.target.value);
   };
 
+  const handleClaim = async (playerID: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/players/${playerID}/claim`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          teamID: 18,  // Replace this with the actual teamID
+          leagueID: leagueID,  // Replace with actual leagueID
+        }),
+      });
+  
+      if (response.ok) {
+        // Player claimed successfully, update UI
+        await fetchPlayers();
+      } else {
+        throw new Error("Failed to claim player");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (loading) {
     return <p>Loading players...</p>;
   }
@@ -66,14 +90,14 @@ const PlayersPage = () => {
         <option value="TE">TE</option>
         <option value="FLEX">Flex</option>
         <option value="K">K</option>
-        <option value="DEF">DEF</option>
+        <option value="D/ST">D/ST</option>
       </select>
       <ul className="list-disc">
         {players?.map((player) => (
           <li key={player.playerID} className="text-lg">
             {player.playerName} - {player.position} <br />
             Team: {player.teamName ? player.teamName : "Unclaimed"} <br />
-            <button>Claim</button>
+            {player.teamName ? "" : <button onClick={() => handleClaim(player.playerID)}>Claim</button>}
           </li>
         ))}
       </ul>
