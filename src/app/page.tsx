@@ -23,15 +23,15 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchLeagues = async () => {
-      const response = await fetch("/api/leagues"); // Replace with your API endpoint
-      const data = await response.json();
-      setLeagues(data);
-    };
+    // const fetchLeagues = async () => {
+    //   const response = await fetch("/api/leagues"); // Replace with your API endpoint
+    //   const data = await response.json();
+    //   setLeagues(data);
+    // };
 
-    if (isLoggedIn) {
-      fetchLeagues();
-    }
+    // if (isLoggedIn) {
+    //   fetchLeagues();
+    // }
   }, [isLoggedIn]);
 
   return (
