@@ -64,7 +64,7 @@ const CreateLeague: React.FC = () => {
             <div className="mb-4 p-2 bg-gray-900 border border-gray-700 rounded">
               <input
                 type="text"
-                value={`${window.location.origin}/league/${leagueID}/join`}
+                value={`${window.location.origin}/league/${leagueID}/join-team`}
                 readOnly
                 className="w-full bg-transparent border-none text-gray-300 outline-none"
               />

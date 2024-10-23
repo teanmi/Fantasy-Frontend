@@ -1,9 +1,12 @@
 // src/app/leagues/[leagueID]/page.tsx
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
+  const leagueID = params.leagueID;
   const [teams, setTeams] = useState<any[]>([]);
   const [leagueName, setLeagueName] = useState<string>("");
   const [teamCount, setTeamCount] = useState<number>(0); // max number of teams
@@ -15,18 +18,24 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
     const fetchLeagueData = async () => {
       try {
         // Fetch league details by ID to get the league name and max team count
-        const leagueResponse = await fetch(`http://localhost:3000/api/league/${params.leagueID}`);
+        const leagueResponse = await fetch(
+          `http://localhost:3000/api/league/${params.leagueID}`
+        );
         const leagueData = await leagueResponse.json();
 
         if (!leagueResponse.ok) {
-          throw new Error(leagueData.message || "Failed to fetch league details");
+          throw new Error(
+            leagueData.message || "Failed to fetch league details"
+          );
         }
 
         setLeagueName(leagueData.league.Name); // Assuming "Name" is the league's name field
         setTeamCount(leagueData.league.team_count); // Assuming "team_count" is the max number of teams
 
         // Fetch teams associated with the leagueID
-        const teamsResponse = await fetch(`http://localhost:3000/api/league/${params.leagueID}/teams`);
+        const teamsResponse = await fetch(
+          `http://localhost:3000/api/league/${params.leagueID}/teams`
+        );
         const teamsData = await teamsResponse.json();
 
         if (teamsResponse.ok) {
@@ -58,15 +67,33 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
       <p className="text-lg mb-8">
         Current Teams: {teams.length} / {teamCount}
       </p>
+
       {teams.length > 0 ? (
         <ul className="list-disc">
           {teams.map((team) => (
-            <li key={team.id} className="text-lg">{team.teamName}</li>
+            <li key={team.id} className="text-lg">
+              <Link
+                href={`/league/${leagueID}/${team.teamID}`}
+                className="text-blue-500 hover:underline"
+              >
+                {team.teamName}
+              </Link>
+            </li>
           ))}
         </ul>
       ) : (
         <p>No teams found for this league.</p>
       )}
+
+      {/* Link to the search page */}
+      <div className="mt-8">
+        <Link
+          href={`/league/${leagueID}/search`}
+          className="text-blue-500 hover:underline"
+        >
+          Search Players
+        </Link>
+      </div>
     </div>
   );
 };

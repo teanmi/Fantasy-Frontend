@@ -116,8 +116,9 @@ const Home: React.FC = () => {
                 <h3 className="font-semibold mt-4">Recent Trades</h3>
                 <ul>
                   {recentTrades.map((trade, index) => (
-                    <li key={index} className="border-b py-2">
-                      {trade.details}
+                    <li key={index}>
+                      <p>{trade.date}</p>
+                      <p>{trade.description}</p>
                     </li>
                   ))}
                 </ul>
