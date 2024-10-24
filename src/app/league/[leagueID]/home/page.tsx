@@ -29,7 +29,7 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
           );
         }
 
-        setLeagueName(leagueData.league.Name); // Assuming "Name" is the league's name field
+        setLeagueName(leagueData.league.name); // Assuming "Name" is the league's name field
         setTeamCount(leagueData.league.team_count); // Assuming "team_count" is the max number of teams
 
         // Fetch teams associated with the leagueID

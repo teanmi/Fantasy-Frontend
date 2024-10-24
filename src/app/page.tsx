@@ -97,12 +97,19 @@ const Home: React.FC = () => {
           {isLoggedIn ? (
             <div className="flex items-center">
               <span className="mr-2">{`Welcome, ${user.name}!`}</span>
-              <button onClick={handleLogout} className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105">
+              <button
+                onClick={handleLogout}
+                className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105"
+              >
                 Logout
               </button>
             </div>
           ) : (
-            <button onClick={handleLogin} className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105" aria-label="Login">
+            <button
+              onClick={handleLogin}
+              className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105"
+              aria-label="Login"
+            >
               Login
             </button>
           )}
@@ -135,28 +142,6 @@ const Home: React.FC = () => {
             </section>
           )}
         </main>
-
-        {/* Features Section */}
-        <section className="p-6 bg-white rounded shadow mt-10">
-          <h2 className="text-2xl font-bold mb-4">Features</h2>
-          <ul>
-            <li>Manage Leagues</li>
-            <li>Create Teams</li>
-            <li>Track Player Stats</li>
-            {/* Add more features here */}
-          </ul>
-        </section>
-
-        {/* Leaderboard Section */}
-        <section className="p-6 bg-white rounded shadow mt-10">
-          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
-          {/* Render leaderboard data here */}
-          <ul>
-            <li>1. Player A - 10 Wins</li>
-            <li>2. Player B - 8 Wins</li>
-            <li>3. Player C - 7 Wins</li>
-          </ul>
-        </section>
 
         <footer className="bg-[#03045e] text-white p-4 text-center">
           <p>© 2024 Playoff Pulse. All rights reserved.</p>

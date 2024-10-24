@@ -12,8 +12,21 @@
   --foreground: #171717; /* Foreground color for text */
   --dark-gray: #4A4A4A; /* Dark Gray for accents */
   --soft-red: #FF6B6B; /* Soft Red for highlights */
-  --bright-blue: #4A90E2; /* Bright Blue for buttons */
+  --bright-blue: #5390d9; /* Bright Blue for buttons */
   --gold: #FFD700; /* Gold for special highlights */
+  --purple: #5e60ce; /* Purple for special highlights */
+  --color-1: #03045e; /* Dark Blue */
+  --color-2: #0077b6; /* Blue */
+  --color-3: #00b4d8; /* Light Blue */
+  --color-4: #90e0ef; /* Lighter Blue */
+  --color-5: #caf0f8; /* Very Light Blue */
+}
+
+html, body {
+  height: 100%; /* Ensure full viewport height */
+  margin: 0;
+  padding: 0;
+  overflow-y: auto; /* Enable scrolling if needed */
 }
 
 body {
@@ -29,6 +42,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow-y: auto; /* Ensure scrolling for long content */
 }
 
 .home-button {
@@ -67,16 +81,16 @@ body {
   background-color: #f87171; /* Example bright red */
 }
 
+.bg-purple-500 {
+  background-color: #5e60ce; /* Example purple */
+}
+
 .bg-gray-50 {
   background-color: #f9fafb; /* Light gray background */
 }
 
 .bg-gradient {
   background: linear-gradient(to right, #1e3a8a, #ffffff, #ef4444); /* Blue to white to red */
-}
-
-.bg-gray-100 {
-  background-color: #f3f4f6; /* Slightly darker gray */
 }
 
 .text-deep-blue {
@@ -114,6 +128,8 @@ body {
 /* New Styles */
 .sidebar {
   background-color: var(--dark-gray); /* Sidebar background */
+  height: 100vh; /* Full height for sidebar */
+  overflow-y: auto; /* Allow scrolling in sidebar */
 }
 
 .sidebar-button {
