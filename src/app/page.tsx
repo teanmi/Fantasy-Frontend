@@ -1,4 +1,3 @@
-// home.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -25,15 +24,25 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const fetchUserStats = async () => {
-      const response = await fetch("/api/user/stats"); // Replace with your API endpoint
-      const data = await response.json();
-      setUserStats(data);
+      try {
+        const response = await fetch("/api/user/stats");
+        if (!response.ok) throw new Error("Failed to fetch stats");
+        const data = await response.json();
+        setUserStats(data);
+      } catch (error) {
+        console.error("Error fetching user stats:", error);
+      }
     };
 
     const fetchRecentTrades = async () => {
-      const response = await fetch("/api/recent-trades"); // Replace with your API endpoint
-      const data = await response.json();
-      setRecentTrades(data);
+      try {
+        const response = await fetch("/api/recent-trades");
+        if (!response.ok) throw new Error("Failed to fetch trades");
+        const data = await response.json();
+        setRecentTrades(data);
+      } catch (error) {
+        console.error("Error fetching recent trades:", error);
+      }
     };
 
     if (isLoggedIn) {
@@ -99,7 +108,7 @@ const Home: React.FC = () => {
           )}
         </header>
 
-        <main className="flex-1 p-10">
+        <main className="flex-1 p-10 overflow-y-auto">
           <div className="text-gray-700 text-lg">
             <p>Display your league stats, create teams, or show other info</p>
             <p className="mt-4 text-center text-xl font-semibold">Get ready for an exciting season!</p>
@@ -126,6 +135,28 @@ const Home: React.FC = () => {
             </section>
           )}
         </main>
+
+        {/* Features Section */}
+        <section className="p-6 bg-white rounded shadow mt-10">
+          <h2 className="text-2xl font-bold mb-4">Features</h2>
+          <ul>
+            <li>Manage Leagues</li>
+            <li>Create Teams</li>
+            <li>Track Player Stats</li>
+            {/* Add more features here */}
+          </ul>
+        </section>
+
+        {/* Leaderboard Section */}
+        <section className="p-6 bg-white rounded shadow mt-10">
+          <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+          {/* Render leaderboard data here */}
+          <ul>
+            <li>1. Player A - 10 Wins</li>
+            <li>2. Player B - 8 Wins</li>
+            <li>3. Player C - 7 Wins</li>
+          </ul>
+        </section>
 
         <footer className="bg-[#03045e] text-white p-4 text-center">
           <p>© 2024 Playoff Pulse. All rights reserved.</p>
