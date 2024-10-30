@@ -91,13 +91,18 @@ const Home: React.FC = () => {
               Support
             </div>
           </Link>
+          <Link href="/weekly-rankings" passHref>
+            <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 w-full h-16 text-center cursor-pointer flex items-center justify-center">
+              Weekly Rankings
+            </div>
+          </Link>
         </aside>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col bg-[#caf0f8]">
           {/* Header */}
-          <header className="relative bg-white shadow-lg p-6 flex items-center rounded-b-lg h-1/4">
-            <div className="absolute top-6 right-6">
+          <header className="relative bg-white shadow-lg p-4 flex items-center rounded-b-lg w-full">
+            <div className="absolute top-4 right-4">
               {isLoggedIn ? (
                 <div className="flex items-center">
                   <span className="mr-2">{`Welcome, ${user.name}!`}</span>
@@ -120,8 +125,8 @@ const Home: React.FC = () => {
             </div>
             <div className="flex-1 flex justify-center">
               <div className="text-center">
-                <h1 className="text-6xl font-extrabold text-[#03045e] mb-4">Playoff Pulse</h1>
-                <p className="text-gray-600 text-lg">Manage your leagues, create teams, and track stats all in one place!</p>
+                <h1 className="text-4xl font-extrabold text-[#03045e] mb-2">Playoff Pulse</h1>
+                <p className="text-gray-600 text-md">Manage your leagues, create teams, and track stats all in one place!</p>
               </div>
             </div>
           </header>
