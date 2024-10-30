@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { signIn } from "next-auth/react";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -15,11 +16,17 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Mock login logic
-    if (username === "JohnDoe" && password === "password") { // Replace with your authentication logic
-      router.push("/");
+    const result = await signIn("credentials", {
+        redirect: false, // Prevent redirection after login
+        username,
+        password,
+    });
+
+    // Handle login response
+    if (result?.error) {
+        setError("Invalid username or password"); // Display error message
     } else {
-      setError("Invalid username or password");
+        router.push("/"); // Redirect to homepage or desired route on success
     }
   };
 
