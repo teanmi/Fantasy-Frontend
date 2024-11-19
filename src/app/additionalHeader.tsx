@@ -70,22 +70,26 @@ const UpcomingGamesHeader: React.FC = () => {
   }
 
   return (
-    <header style={{ backgroundColor: '#0077b6', padding: '10px', color: '#fff' }}>
-      <h2>Upcoming Football Games</h2>
-      <div style={{ display: 'flex', overflowX: 'scroll' }}>
+    <header className="bg-white shadow p-4 rounded mb-4">
+      <div className="flex space-x-6 overflow-x-auto">
         {games.length > 0 ? (
           games.map((game, index) => (
-            <div key={index} style={{ margin: '0 15px' }}>
-              <p>{game.awayTeam} vs {game.homeTeam}</p>
-              <p>{new Date(game.gameTime).toLocaleString()}</p>
+            <div
+              key={index}
+              className="bg-[#caf0f8] p-4 rounded shadow flex-shrink-0"
+              style={{ minWidth: '200px' }}
+            >
+              <p className="text-lg font-semibold text-gray-800">{game.awayTeam} vs {game.homeTeam}</p>
+              <p className="text-gray-600">{new Date(game.gameTime).toLocaleString()}</p>
             </div>
           ))
         ) : (
-          <p>No upcoming games</p>
+          <p className="text-gray-600">No upcoming games</p>
         )}
       </div>
     </header>
   );
+  
 };
 
 export default UpcomingGamesHeader;

@@ -54,52 +54,17 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-r from-[#0077b6] to-[#90e0ef]">
-      {/* Upcoming Games Header */}
-      <UpcomingGamesHeader />
-
       <div className="flex flex-1">
-
-
         {/* Main Content */}
         <div className="flex-1 flex flex-col bg-[#caf0f8]">
-          {/* Header */}
-          <header className="relative bg-white shadow-lg p-4 flex items-center rounded-b-lg w-full">
-            <div className="absolute top-4 right-4">
-              {isLoggedIn ? (
-                <div className="flex items-center">
-                  <span className="mr-2">{`Welcome, ${user.name}!`}</span>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-2 px-4 rounded transition-transform transform hover:scale-105"
-                  aria-label="Login"
-                >
-                  Login
-                </button>
-              )}
-            </div>
-            <div className="flex-1 flex justify-center">
-              <div className="text-center">
-                <h1 className="text-4xl font-extrabold text-[#03045e] mb-2">Playoff Pulse</h1>
-                <p className="text-gray-600 text-md">Manage your leagues, create teams, and track stats all in one place!</p>
-              </div>
-            </div>
-          </header>
-
-          {/* Main Section */}
           <main className="flex-1 p-10 overflow-y-auto">
-            <div className="text-gray-700 text-lg">
-              <p>Display your league stats, create teams, or show other info</p>
-              <p className="mt-4 text-center text-xl font-semibold">Get ready for an exciting season!</p>
-            </div>
-
+            {/* Upcoming Games Section */}
+            <section className="mb-10">
+              <h2 className="text-2xl font-bold mb-4">Upcoming Football Games</h2>
+              <UpcomingGamesHeader />
+            </section>
+  
+            {/* Recent Activity Section */}
             {isLoggedIn && (
               <section className="mt-10">
                 <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
@@ -121,7 +86,7 @@ const Home: React.FC = () => {
               </section>
             )}
           </main>
-
+  
           {/* Footer */}
           <footer className="bg-[#03045e] text-white p-4 text-center">
             <p>© 2024 Playoff Pulse. All rights reserved.</p>
@@ -137,6 +102,9 @@ const Home: React.FC = () => {
       </div>
     </div>
   );
+  
+  
+  
 };
 
 export default Home;
