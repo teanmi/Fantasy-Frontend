@@ -27,7 +27,7 @@ export const authOptions = {
 
           // If the login is successful, return the user object
           if (res.ok && data) {
-            return data; // Customize based on your backend response
+            return {id: data.id, name: data.username }; // Customize based on your backend response
           } else {
             return null; // Return null to signal failure
           }
