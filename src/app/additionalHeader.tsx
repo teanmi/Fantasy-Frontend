@@ -71,16 +71,23 @@ const UpcomingGamesHeader: React.FC = () => {
 
   return (
     <header className="bg-white shadow p-4 rounded mb-4">
-      <div className="flex space-x-6 overflow-x-auto">
+      <div className="flex flex-wrap gap-4 justify-start">
         {games.length > 0 ? (
           games.map((game, index) => (
             <div
               key={index}
-              className="bg-[#caf0f8] p-4 rounded shadow flex-shrink-0"
-              style={{ minWidth: '200px' }}
+              className="bg-[#caf0f8] p-4 rounded shadow"
+              style={{
+                width: '300px', // Fixed width for all cards
+                flex: '0 0 auto', // Prevent stretching
+              }}
             >
-              <p className="text-lg font-semibold text-gray-800">{game.awayTeam} vs {game.homeTeam}</p>
-              <p className="text-gray-600">{new Date(game.gameTime).toLocaleString()}</p>
+              <p className="text-lg font-semibold text-gray-800">
+                {game.awayTeam} vs {game.homeTeam}
+              </p>
+              <p className="text-gray-600">
+                {new Date(game.gameTime).toLocaleString()}
+              </p>
             </div>
           ))
         ) : (
@@ -89,6 +96,8 @@ const UpcomingGamesHeader: React.FC = () => {
       </div>
     </header>
   );
+  
+  
   
 };
 
