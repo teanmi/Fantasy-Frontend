@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const PlayersPage = () => {
   const { leagueID } = useParams(); // Get the leagueID from the URL parameters
@@ -9,6 +10,15 @@ const PlayersPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [position, setPosition] = useState<string>("");
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect if user is not logged in
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to sign-in page
+    }
+  }, [status, router]);
 
   const fetchPlayers = async () => {
     setLoading(true);
@@ -34,6 +44,8 @@ const PlayersPage = () => {
   };
 
   useEffect(() => {
+    if (status !== "authenticated") return; // Wait until authentication is confirmed
+
     if (leagueID) {
       fetchPlayers();
     }

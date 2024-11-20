@@ -1,8 +1,9 @@
 "use client"; // Ensure the component runs on the client side
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+import { useSession } from "next-auth/react";
 
 const CreateLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
@@ -12,6 +13,14 @@ const CreateLeague: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [leagueID, setLeagueId] = useState<number | null>(null);
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if user is not logged in
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to sign-in page
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

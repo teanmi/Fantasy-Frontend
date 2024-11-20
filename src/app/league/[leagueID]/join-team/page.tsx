@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const CreateTeam = () => {
   const [teamName, setTeamName] = useState<string>("");
@@ -10,8 +11,18 @@ const CreateTeam = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const params = useParams(); // Access dynamic route params
+  const { data: session, status } = useSession();
+
+  // Redirect if user is not logged in
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to sign-in page
+    }
+  }, [status, router]);
 
   useEffect(() => {
+    if (status !== "authenticated") return; // Wait until authentication is confirmed
+
     const fetchLeague = async () => {
       try {
         const response = await fetch(

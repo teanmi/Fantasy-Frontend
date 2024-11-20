@@ -1,13 +1,22 @@
 "use client"; // Ensure the component runs on the client side
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const JoinLeague: React.FC = () => {
   const [leagueCode, setLeagueCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<null>(null);
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if user is not logged in
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to sign-in page
+    }
+  }, [status, router]);
 
   const handleJoinLeague = async (e: React.FormEvent) => {
     e.preventDefault();

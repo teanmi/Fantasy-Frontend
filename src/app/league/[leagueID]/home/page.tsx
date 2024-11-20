@@ -3,21 +3,32 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
   const leagueID = params.leagueID;
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [teams, setTeams] = useState<any[]>([]);
   const [leagueName, setLeagueName] = useState<string>("");
-  const [teamCount, setTeamCount] = useState<number>(0); // max number of teams
+  const [teamCount, setTeamCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Redirect if user is not logged in
   useEffect(() => {
-    // Function to fetch both the league details and the teams
+    if (status === "unauthenticated") {
+      router.push("/login"); // Redirect to sign-in page
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return; // Wait until authentication is confirmed
+
     const fetchLeagueData = async () => {
       try {
-        // Fetch league details by ID to get the league name and max team count
         const leagueResponse = await fetch(
           `http://localhost:3000/api/league/${params.leagueID}`
         );
@@ -29,10 +40,9 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
           );
         }
 
-        setLeagueName(leagueData.league.name); // Assuming "Name" is the league's name field
-        setTeamCount(leagueData.league.team_count); // Assuming "team_count" is the max number of teams
+        setLeagueName(leagueData.league.name);
+        setTeamCount(leagueData.league.team_count);
 
-        // Fetch teams associated with the leagueID
         const teamsResponse = await fetch(
           `http://localhost:3000/api/league/${params.leagueID}/teams`
         );
@@ -51,9 +61,9 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
     };
 
     fetchLeagueData();
-  }, [params.leagueID]);
+  }, [params.leagueID, status]);
 
-  if (loading) {
+  if (loading || status === "loading") {
     return <p>Loading league details and teams...</p>;
   }
 
@@ -85,7 +95,6 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
         <p>No teams found for this league.</p>
       )}
 
-      {/* Link to the search page */}
       <div className="mt-8">
         <Link
           href={`/league/${leagueID}/search`}
