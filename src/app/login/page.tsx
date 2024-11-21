@@ -16,21 +16,28 @@ const Login: React.FC = () => {
   // Handle login process
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // Call NextAuth's signIn function with the credentials provider
-
     const result = await signIn("credentials", {
       redirect: false,
       username,
       password,
     });
- 
+  
     if (result?.error) {
       setError("Invalid username or password"); // Display error message
     } else {
+      // Fetch session data with updated userID
+      const response = await fetch("/api/auth/session");
+      const session = await response.json();
+  
+      if (session?.user) {
+        console.log("UserID:", session.user.id); // Verify userID in session
+      }
+  
       router.push("/"); // Redirect to dashboard or desired route on success
     }
-  };
+  };  
 
   // Handle account creation process
   const handleCreateAccount = async (e: React.FormEvent) => {

@@ -1,8 +1,8 @@
-"use client"; // Ensure the component runs on the client side
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from 'next/link';
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 const CreateLeague: React.FC = () => {
@@ -22,6 +22,27 @@ const CreateLeague: React.FC = () => {
     }
   }, [status, router]);
 
+  const linkUserToLeague = async (leagueID: number) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/league/user-link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          leagueID,
+          userID: session?.user?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to link user to league.");
+      }
+    } catch (err: any) {
+      console.error("Error linking user to league:", err.message);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true); // Set loading state to true while submitting
@@ -37,12 +58,15 @@ const CreateLeague: React.FC = () => {
           numTeams,
         }),
       });
-      console.log(response);
+
       if (response.ok) {
         const { leagueID } = await response.json();
-        console.log(leagueID);
         setLeagueId(leagueID);
         setShowModal(true);
+
+        // Link the user to the created league
+        await linkUserToLeague(leagueID);
+
         setLeagueName(""); // Reset form fields
         setNumTeams(8); // Reset to default number of teams
       } else {
@@ -57,7 +81,6 @@ const CreateLeague: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600">
-      {/* Gradient background */}
       {showModal && leagueID && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
@@ -68,8 +91,6 @@ const CreateLeague: React.FC = () => {
               Your league has been created successfully. Copy the link below or
               click the button to create your team.
             </p>
-
-            {/* Link to Copy */}
             <div className="mb-4 p-2 bg-gray-900 border border-gray-700 rounded">
               <input
                 type="text"
@@ -78,8 +99,6 @@ const CreateLeague: React.FC = () => {
                 className="w-full bg-transparent border-none text-gray-300 outline-none"
               />
             </div>
-
-            {/* Button to Redirect */}
             <Link
               href={`/league/${leagueID}/join-team`}
               passHref
@@ -87,8 +106,6 @@ const CreateLeague: React.FC = () => {
             >
               Create Your Team
             </Link>
-
-            {/* Close Modal Button */}
             <button
               onClick={() => setShowModal(false)}
               className="mt-4 text-gray-400 underline hover:text-white transition-all duration-200"
@@ -98,7 +115,6 @@ const CreateLeague: React.FC = () => {
           </div>
         </div>
       )}
-
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
         <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">
           Create a League
@@ -121,7 +137,6 @@ const CreateLeague: React.FC = () => {
               required
             />
           </div>
-
           <div className="flex flex-col">
             <label
               className="font-semibold text-lg text-deep-blue"
@@ -142,7 +157,6 @@ const CreateLeague: React.FC = () => {
               <option value={16}>16 Teams</option>
             </select>
           </div>
-
           <button
             type="submit"
             className={`mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg shadow-md transition-all duration-300 ${
@@ -153,8 +167,6 @@ const CreateLeague: React.FC = () => {
             {loading ? "Creating League..." : "Create League"}
           </button>
         </form>
-
-        {/* Home Button */}
         <button
           onClick={() => router.push("/")}
           className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md hover:bg-light-gray"

@@ -18,6 +18,27 @@ const JoinLeague: React.FC = () => {
     }
   }, [status, router]);
 
+  const linkUserToLeague = async (leagueID: number) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/league/user-link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          leagueID,
+          userID: session?.user?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to link user to league.");
+      }
+    } catch (err: any) {
+      console.error("Error linking user to league:", err.message);
+    }
+  };
+
   const handleJoinLeague = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); // Set loading state to true while submitting
@@ -36,7 +57,9 @@ const JoinLeague: React.FC = () => {
 
       const data = await response.json();
       if (response.ok) {
-        router.push(`/league/${leagueCode}/join-team   `); // Redirect to league join page
+        // Once the league is validated, link the user to the league
+        await linkUserToLeague(Number(leagueCode));
+        router.push(`/league/${leagueCode}/join-team`); // Redirect to league join page
       } else {
         throw new Error(
           data?.message ? data.message : "Failed to validate league."
