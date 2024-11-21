@@ -30,20 +30,22 @@ const JoinLeague: React.FC = () => {
           userID: session?.user?.id,
         }),
       });
-
+  
       if (!response.ok) {
-        throw new Error("Failed to link user to league.");
+        const errorData = await response.json(); // Parse the error response
+        throw new Error(errorData?.message || "Failed to link user to league.");
       }
     } catch (err: any) {
       console.error("Error linking user to league:", err.message);
+      throw new Error(err.message || "An unexpected error occurred."); // Re-throw for parent try-catch
     }
   };
-
+  
   const handleJoinLeague = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); // Set loading state to true while submitting
     setError(null); // Reset error state
-
+  
     try {
       const response = await fetch(
         `http://localhost:3000/api/league/${leagueCode}/validate-code`,
@@ -54,23 +56,23 @@ const JoinLeague: React.FC = () => {
           },
         }
       );
-
+  
       const data = await response.json();
       if (response.ok) {
         // Once the league is validated, link the user to the league
         await linkUserToLeague(Number(leagueCode));
         router.push(`/league/${leagueCode}/join-team`); // Redirect to league join page
       } else {
-        throw new Error(
-          data?.message ? data.message : "Failed to validate league."
-        );
+        throw new Error(data?.message || "Failed to validate league.");
       }
     } catch (err: any) {
+      console.error("Error during league join process:", err.message);
       setError(err.message || "Something went wrong. Please try again."); // Set error message
     } finally {
-      setLoading(false);
+      setLoading(false); // Ensure loading state is reset
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600">
