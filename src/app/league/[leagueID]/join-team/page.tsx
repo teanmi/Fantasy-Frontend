@@ -28,15 +28,12 @@ const CreateTeam = () => {
         const response = await fetch(
           `http://localhost:3000/api/league/${params.leagueID}`
         );
-        
         if (!response.ok) {
           throw new Error("Failed to fetch league data.");
         }
 
         const data = await response.json();
-
         if (data.league) {
-
           setLeagueName(data.league.name); // Assuming `result[0]` contains the `Name` field
         } else {
           throw new Error("League not found.");
@@ -57,7 +54,8 @@ const CreateTeam = () => {
     setError(null);
 
     try {
-      const response = await fetch(
+      // Step 1: Create the team in the league
+      const createTeamResponse = await fetch(
         `http://localhost:3000/api/league/${params.leagueID}/create-team`,
         {
           method: "POST",
@@ -70,14 +68,42 @@ const CreateTeam = () => {
           }),
         }
       );
-      
-      const data = await response.json();
+      const createTeamData = await createTeamResponse.json();
 
-      if (response.ok) {
-        router.push(`/league/${params.leagueID}/home`); // Redirect to the league page
-      } else {
-        throw new Error(data?.message ? data.message : "Failed to create team.");
+      if (!createTeamResponse.ok) {
+        throw new Error(
+          createTeamData?.message ? createTeamData.message : "Failed to create team."
+        );
       }
+
+      // Step 2: Link the team to the user
+      const linkTeamResponse = await fetch(
+        `http://localhost:3000/api/teams/link`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: session?.user?.id,
+            teamID: createTeamData.teamId, // Assuming the API response includes the new team's ID
+            leagueID: params.leagueID,
+          }),
+        }
+      );
+
+      const linkTeamData = await linkTeamResponse.json();
+
+      if (!linkTeamResponse.ok) {
+        throw new Error(
+          linkTeamData?.message
+            ? linkTeamData.message
+            : "Failed to link team to user."
+        );
+      }
+
+      // Redirect to the league page
+      router.push(`/league/${params.leagueID}/home`);
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -86,15 +112,18 @@ const CreateTeam = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600"> {/* Gradient background */}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-700 via-white to-red-600">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
         <h1 className="text-4xl font-bold mb-4 text-center text-deep-blue">
           Create Your Team for {leagueName ? leagueName : "League"}
         </h1>
-        
+
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col">
-            <label className="font-semibold text-lg text-deep-blue" htmlFor="teamName">
+            <label
+              className="font-semibold text-lg text-deep-blue"
+              htmlFor="teamName"
+            >
               Team Name
             </label>
             <input
@@ -108,7 +137,6 @@ const CreateTeam = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className={`mt-6 bg-deep-blue text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 ${
@@ -119,13 +147,11 @@ const CreateTeam = () => {
             {loading ? "Creating Team..." : "Create Team"}
           </button>
 
-          {/* Error Message */}
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>} {/* Inline error message */}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
 
-        {/* Home Button */}
         <button
-          onClick={() => router.push("/")} // Redirect to the homepage
+          onClick={() => router.push("/")}
           className="mt-4 bg-gray-300 text-deep-blue font-bold py-3 px-8 rounded-lg shadow-md transition duration-200 hover:bg-light-gray"
           aria-label="Go to Home"
         >

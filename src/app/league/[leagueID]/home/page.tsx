@@ -1,4 +1,3 @@
-// src/app/leagues/[leagueID]/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -16,6 +15,7 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
   const [teamCount, setTeamCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userTeamID, setUserTeamID] = useState<string | null>(null); // Store the user's team ID
 
   // Redirect if user is not logged in
   useEffect(() => {
@@ -26,6 +26,31 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
 
   useEffect(() => {
     if (status !== "authenticated") return; // Wait until authentication is confirmed
+
+    const fetchUserTeam = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/user-team", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: session?.user?.id,
+            leagueID: params.leagueID,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setUserTeamID(data.teamID);
+        } else {
+          setUserTeamID(null);
+        }
+      } catch (err: any) {
+        setError("Unable to fetch user team.");
+      }
+    };
 
     const fetchLeagueData = async () => {
       try {
@@ -60,8 +85,9 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
       }
     };
 
-    fetchLeagueData();
-  }, [params.leagueID, status]);
+    fetchUserTeam(); // Fetch the user's team
+    fetchLeagueData(); // Fetch league data and teams
+  }, [params.leagueID, session?.user?.id, status]);
 
   if (loading || status === "loading") {
     return <p>Loading league details and teams...</p>;
@@ -87,6 +113,10 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
                 className="text-blue-500 hover:underline"
               >
                 {team.teamName}
+                {/* If the user is linked to this team, display (Your Team) */}
+                {userTeamID === team.teamID && (
+                  <span className="ml-2 text-green-500">(Your Team)</span>
+                )}
               </Link>
             </li>
           ))}
