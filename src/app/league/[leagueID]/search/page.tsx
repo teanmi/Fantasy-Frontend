@@ -12,6 +12,7 @@ const PlayersPage = () => {
   const [position, setPosition] = useState<string>("");
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [userTeamID, setUserTeamID] = useState<string | null>(null); // Store user's team ID
 
   // Redirect if user is not logged in
   useEffect(() => {
@@ -19,6 +20,38 @@ const PlayersPage = () => {
       router.push("/login"); // Redirect to sign-in page
     }
   }, [status, router]);
+
+  // Fetch the logged-in user's teamID for the league
+  useEffect(() => {
+    if (status !== "authenticated" || !leagueID) return; // Wait until authentication is confirmed
+
+    const fetchUserTeam = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/user-team", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: session?.user?.id,  // Ensure userID is correctly passed
+            leagueID: leagueID,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.teamID) {
+          setUserTeamID(data.teamID); // Set the user's teamID
+        } else {
+          setUserTeamID(null);
+        }
+      } catch (err: any) {
+        setError("Unable to fetch user team.");
+      }
+    };
+
+    fetchUserTeam();
+  }, [status, leagueID, session?.user?.id]); // Re-run when the user logs in or leagueID changes
 
   const fetchPlayers = async () => {
     setLoading(true);
@@ -56,6 +89,11 @@ const PlayersPage = () => {
   };
 
   const handleClaim = async (playerID: string) => {
+    if (!userTeamID) {
+      setError("You must have a team to claim players.");
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:3000/api/players/${playerID}/claim`, {
         method: "POST",
@@ -63,11 +101,11 @@ const PlayersPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          teamID: 18,  // Replace this with the actual teamID
-          leagueID: leagueID,  // Replace with actual leagueID
+          teamID: userTeamID,  // Use the actual user's teamID
+          leagueID: leagueID,  // Pass the leagueID
         }),
       });
-  
+
       if (response.ok) {
         // Player claimed successfully, update UI
         await fetchPlayers();
