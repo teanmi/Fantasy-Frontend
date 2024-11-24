@@ -141,12 +141,12 @@ const TeamPage = () => {
       if (!["QB", "RB", "WR", "TE", "FLEX", "K", "D/ST", "BE"].includes(newSlot)) {
         throw new Error("Invalid slot value");
       }
-
+  
       const slotCount = players.filter((player) => playerSlots[player.playerID] === newSlot).length;
       if (slotCount >= slotLimits[newSlot]) {
         throw new Error(`Cannot assign more players to ${newSlot}. Limit reached.`);
       }
-
+  
       const response = await fetch("http://localhost:3000/api/player-slot", {
         method: "PUT",
         headers: {
@@ -159,24 +159,44 @@ const TeamPage = () => {
           newSlot: newSlot,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Failed to update player slot");
       }
-
+  
       setPlayerSlots((prev) => ({
         ...prev,
         [playerID]: newSlot, 
       }));
-
+  
+      // After changing position, fetch updated player data (including fantasy points)
       const updatedPlayersResponse = await fetch(
         `http://localhost:3000/api/teams/${teamID}/players?leagueID=${leagueID}`
       );
       const updatedPlayersData = await updatedPlayersResponse.json();
-      setPlayers(updatedPlayersData.players);
-
+  
+      // Fetch updated fantasy points for each player
+      const playersWithPoints = await Promise.all(
+        updatedPlayersData.players.map(async (player) => {
+          const fantasyPointsResponse = await fetch(`http://localhost:3000/api/fantasy-points?playerID=${player.playerID}&week=${currentWeek}`);
+          const fantasyPointsData = await fantasyPointsResponse.json();
+  
+          const projectedFantasyPointsResponse = await fetch(`http://localhost:3000/api/projected-fantasy-points?playerID=${player.playerID}&week=${currentWeek}`);
+          const projectedFantasyPointsData = await projectedFantasyPointsResponse.json();
+  
+          return {
+            ...player,
+            fantasyPoints: fantasyPointsData.fantasy_points || 0,
+            projectedFantasyPoints: projectedFantasyPointsData.fantasy_points || 0,
+          };
+        })
+      );
+  
+      // Update the players state with new data
+      setPlayers(playersWithPoints);
+  
     } catch (err) {
       setError(err.message || "Failed to change position");
       console.error("Error changing slot:", err);
