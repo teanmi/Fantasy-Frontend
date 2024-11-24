@@ -10,11 +10,12 @@ const TeamPage = () => {
   const { data: session, status } = useSession();
 
   const [team, setTeam] = useState<any>(null);
-  const [players, setPlayers] = useState<any[]>([]); 
+  const [players, setPlayers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [eligibleSlots, setEligibleSlots] = useState<{ [playerID: string]: string[] }>({}); 
+  const [eligibleSlots, setEligibleSlots] = useState<{ [playerID: string]: string[] }>({});
   const [playerSlots, setPlayerSlots] = useState<{ [playerID: string]: string }>({});
+  const [currentWeek, setCurrentWeek] = useState<number | null>(null);
 
   // Slot limits for each position
   const slotLimits = {
@@ -35,9 +36,24 @@ const TeamPage = () => {
     }
   }, [status, router]);
 
-  // Fetch team and players
+  // Fetch current week (max week), team, and players
   useEffect(() => {
-    if (status !== "authenticated") return; 
+    if (status !== "authenticated") return;
+
+    const fetchMaxWeek = async () => {
+      try {
+        const maxWeekResponse = await fetch(`http://localhost:3000/api/max-week`);
+        const maxWeekData = await maxWeekResponse.json();
+
+        if (maxWeekResponse.ok) {
+          setCurrentWeek(maxWeekData.maxWeek);
+        } else {
+          throw new Error("Failed to fetch max week");
+        }
+      } catch (err) {
+        setError(err.message || "Failed to fetch current week");
+      }
+    };
 
     const fetchTeamAndPlayers = async () => {
       try {
@@ -48,10 +64,28 @@ const TeamPage = () => {
 
         if (teamResponse.ok && playersResponse.ok) {
           setTeam(teamData.team);
-          setPlayers(playersData.players);
+          
+          // Fetch fantasy points and projected fantasy points for each player
+          const playersWithPoints = await Promise.all(
+            playersData.players.map(async (player) => {
+              const fantasyPointsResponse = await fetch(`http://localhost:3000/api/fantasy-points?playerID=${player.playerID}&week=${currentWeek}`);
+              const fantasyPointsData = await fantasyPointsResponse.json();
 
+              const projectedFantasyPointsResponse = await fetch(`http://localhost:3000/api/projected-fantasy-points?playerID=${player.playerID}&week=${currentWeek}`);
+              const projectedFantasyPointsData = await projectedFantasyPointsResponse.json();
+
+              return {
+                ...player,
+                fantasyPoints: fantasyPointsData.fantasy_points || 0,
+                projectedFantasyPoints: projectedFantasyPointsData.fantasy_points || 0,
+              };
+            })
+          );
+
+          setPlayers(playersWithPoints);
+          
           // Fetch eligible slots for each player and their current slot
-          for (const player of playersData.players) {
+          for (const player of playersWithPoints) {
             const slotsResponse = await fetch(`http://localhost:3000/api/players/${player.playerID}/eligible-slots`);
             const slotsData = await slotsResponse.json();
 
@@ -83,8 +117,9 @@ const TeamPage = () => {
       }
     };
 
+    fetchMaxWeek();
     fetchTeamAndPlayers();
-  }, [leagueID, teamID, status]);
+  }, [leagueID, teamID, status, currentWeek]);
 
   const sanitizeSlots = (slots: string[]) => {
     const uniqueSlots = new Set(
@@ -99,7 +134,6 @@ const TeamPage = () => {
     );
     return Array.from(uniqueSlots);
   };
-  
 
   // Handle position change
   const handlePositionChange = async (playerID: string, newSlot: string) => {
@@ -149,7 +183,7 @@ const TeamPage = () => {
     }
   };
 
-  if (loading || status === "loading") {
+  if (loading || status === "loading" || !currentWeek) {
     return <p>Loading team details...</p>;
   }
 
@@ -185,47 +219,47 @@ const TeamPage = () => {
   const groupedPlayers = groupPlayersBySlot(players);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-4">{team?.teamName}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
+    <div className="min-h-screen flex flex-col items-center justify-start p-4">
+      <h1 className="text-4xl font-bold mb-6">{team?.teamName}</h1>
+      <div className="w-full max-w-4xl overflow-y-auto">
         {Object.entries(groupedPlayers).map(([slot, players]) => {
           const slotCount = players.length; // Current number of players in the slot
           const availableSlots = slotLimits[slot] - slotCount; // Calculate available slots
-
+  
           return (
-            <div key={slot} className="p-6 border rounded-lg w-full max-w-xl">
+            <div key={slot} className="mb-6 p-4 border-b border-gray-300">
               {/* Display slot header with available slots if it's not Bench */}
-              <h2 className="text-2xl font-semibold mb-2">
+              <h2 className="text-2xl font-semibold mb-4">
                 {slot}
                 {slot !== "BE" && availableSlots >= 0 && ` (${availableSlots} ${availableSlots === 1 ? 'Slot' : 'Slots'} Available)`}
               </h2>
               {players.length > 0 ? (
-                <ul className="list-disc pl-6">
+                <ul className="list-none pl-0">
                   {players.map((player) => (
-                    <li key={player.playerID} className="text-lg flex justify-between items-center mb-3">
-                      <span>{player.name}</span>
-                      <span className="text-sm text-gray-500">{player.position}</span>
-                      <select
-                        onChange={(e) => handlePositionChange(player.playerID, e.target.value)}
-                        value={playerSlots[player.playerID] || "BE"}
-                        className="ml-4 p-2 border rounded w-full max-w-xs"
-                      >
-                        {eligibleSlots[player.playerID]?.map((slot: string) => {
-                          const slotCount = players.filter((p) => playerSlots[p.playerID] === slot).length;
-                          const isDisabled = slotCount >= slotLimits[slot];
-
-                          return (
-                            <option key={slot} value={slot} disabled={isDisabled}>
+                    <li key={player.playerID} className="flex justify-between items-center mb-4 p-3 border rounded-md bg-white shadow-sm">
+                      <div className="flex flex-col">
+                        <span className="text-lg font-medium">{player.name}</span>
+                        <span className="text-sm text-gray-500">{player.position}</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm text-blue-500 mb-2">{`Fantasy: ${player.fantasyPoints} / Projected: ${player.projectedFantasyPoints}`}</span>
+                        <select
+                          value={playerSlots[player.playerID]}
+                          onChange={(e) => handlePositionChange(player.playerID, e.target.value)}
+                          className="p-2 border rounded bg-white"
+                        >
+                          {eligibleSlots[player.playerID]?.map((slot) => (
+                            <option key={slot} value={slot}>
                               {slot}
                             </option>
-                          );
-                        })}
-                      </select>
+                          ))}
+                        </select>
+                      </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p>No players assigned to this slot.</p>
+                <p className="text-gray-500">No players in this slot</p>
               )}
             </div>
           );
@@ -233,6 +267,7 @@ const TeamPage = () => {
       </div>
     </div>
   );
+  
 };
 
 export default TeamPage;
