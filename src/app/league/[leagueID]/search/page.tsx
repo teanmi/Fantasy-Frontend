@@ -138,7 +138,6 @@ const PlayersPage = () => {
         <option value="RB">RB</option>
         <option value="WR">WR</option>
         <option value="TE">TE</option>
-        <option value="FLEX">Flex</option>
         <option value="K">K</option>
         <option value="D/ST">D/ST</option>
       </select>

@@ -86,15 +86,20 @@ const TeamPage = () => {
     fetchTeamAndPlayers();
   }, [leagueID, teamID, status]);
 
-  // Function to sanitize the slot data
   const sanitizeSlots = (slots: string[]) => {
     const uniqueSlots = new Set(
       slots
-        .filter((slot) => slot !== "IR" && slot !== "OP" && slot !== "Rookie") 
-        .map((slot) => (slot.includes("/") ? "FLEX" : slot)) 
+        .filter((slot) => slot !== "IR" && slot !== "OP" && slot !== "Rookie")
+        .map((slot) => {
+          if (slot.includes("/") && slot !== "D/ST") {
+            return "FLEX";
+          }
+          return slot;
+        })
     );
     return Array.from(uniqueSlots);
   };
+  
 
   // Handle position change
   const handlePositionChange = async (playerID: string, newSlot: string) => {
