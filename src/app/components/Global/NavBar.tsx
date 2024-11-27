@@ -58,29 +58,14 @@ export default function NavBar() {
               </Link>
             </>
           )}
-          <Link href="/picks" passHref>
+          <Link href="/articles" passHref>
             <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 text-center cursor-pointer flex items-center justify-center">
-              Picks
+              News
             </div>
           </Link>
-          <Link href="/mock-drafts" passHref>
+          <Link href="/" passHref>
             <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 text-center cursor-pointer flex items-center justify-center">
-              Mock Drafts
-            </div>
-          </Link>
-          <Link href="/blog" passHref>
-            <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 text-center cursor-pointer flex items-center justify-center">
-              Blog
-            </div>
-          </Link>
-          <Link href="/support" passHref>
-            <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 text-center cursor-pointer flex items-center justify-center">
-              Support
-            </div>
-          </Link>
-          <Link href="/weekly-rankings" passHref>
-            <div className="bg-[#0077b6] hover:bg-[#00b4d8] text-white font-bold py-3 px-6 rounded transition-transform transform hover:scale-105 text-center cursor-pointer flex items-center justify-center">
-              Weekly Rankings
+              Home
             </div>
           </Link>
         </div>
