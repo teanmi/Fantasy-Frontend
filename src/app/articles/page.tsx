@@ -1,10 +1,8 @@
 "use client";
 
-// pages/articles.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// Define types for the articles fetched from the backend
 interface Image {
   name: string;
   caption: string;
@@ -27,16 +25,14 @@ const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState<number>(1);  // Track the current page
-  const [hasMore, setHasMore] = useState<boolean>(true);  // Track if there are more articles to load
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  // Fetch articles from the backend API
   const fetchArticles = async (page: number) => {
     try {
       const response = await axios.get(`http://localhost:3000/api/get-articles?page=${page}`);
       const newArticles = response.data.articles;
       
-      // Append new articles to the existing list without duplicates
       setArticles((prevArticles) => {
         const newArticlesSet = new Set(prevArticles.map(article => article._id));
         const filteredArticles = [
@@ -46,7 +42,6 @@ const Articles = () => {
         return filteredArticles;
       });
 
-      // If the new articles are fewer than 10, set hasMore to false
       if (newArticles.length < 10) {
         setHasMore(false);
       }
@@ -57,15 +52,13 @@ const Articles = () => {
     }
   };
 
-  // Initial fetch on page load
   useEffect(() => {
     fetchArticles(page);
   }, [page]);
 
-  // Handle load more button click
   const handleLoadMore = () => {
     setLoading(true);
-    setPage((prevPage) => prevPage + 1);  // Increment page number to load more articles
+    setPage((prevPage) => prevPage + 1);
   };
 
   if (loading && page === 1) return <div className="text-center py-10 text-lg">Loading...</div>;
@@ -97,7 +90,6 @@ const Articles = () => {
         </div>
       )}
 
-      {/* Load More Button */}
       {hasMore && (
         <div className="text-center mt-6">
           <button
