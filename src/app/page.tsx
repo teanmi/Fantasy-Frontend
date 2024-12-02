@@ -60,7 +60,7 @@ const Home: React.FC = () => {
           <main className="flex-1 p-10 overflow-y-auto">
             {/* Upcoming Games Section */}
             <section className="mb-10">
-              <h2 className="text-2xl font-bold mb-4">Upcoming Football Games</h2>
+              <h2 className="text-2xl font-bold mb-4">Important Games</h2>
               <UpcomingGamesHeader />
             </section>
   
