@@ -17,6 +17,35 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
   const [error, setError] = useState<string | null>(null);
   const [userTeamID, setUserTeamID] = useState<string | null>(null); // Store the user's team ID
 
+  const handleDeleteLeague = async () => {
+    setLoading(true); // Set loading state to true while submitting
+    setError(null); // Reset error state
+
+    console.log("Deleting league with ID:", leagueID);
+    
+    try {
+      const response = await fetch("http://localhost:3000/api/league/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          leagueID
+        }),
+      });
+
+      if (response.ok) {
+        router.push("/"); // Redirect to the homepage
+      } else {
+        throw new Error("Failed to delete league.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again."); // Handle errors
+    } finally {
+      setLoading(false); // Reset loading state
+    }
+  };
+
   // Redirect if user is not logged in
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -132,6 +161,16 @@ const LeagueHomePage = ({ params }: { params: { leagueID: string } }) => {
         >
           Search Players
         </Link>
+      </div>
+
+      <div className="mt-4">
+        <button
+            onClick={handleDeleteLeague}
+            className="bg-red-400 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-red-600"
+            aria-label="Create League"
+          >
+            Delete League
+          </button>
       </div>
     </div>
   );
